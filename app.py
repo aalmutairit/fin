@@ -2,72 +2,51 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET', 'POST'])
+# تحديد معامل التكلفة بناءً على عدد المركبات
+def get_cost_factor(vehicle_count, category):
+    if category == "non_hazardous":
+        if vehicle_count < 10:
+            return 0.8, 1000  # معامل التكلفة منخفض
+        elif 10 <= vehicle_count <= 50:
+            return 1.0, 3000  # معامل التكلفة متوسط
+        else:
+            return 1.3, 5000  # معامل التكلفة مرتفع
+    elif category == "hazardous":
+        if vehicle_count < 5:
+            return 0.8, 1000  # معامل التكلفة منخفض
+        elif 5 <= vehicle_count <= 30:
+            return 1.0, 3000  # معامل التكلفة متوسط
+        else:
+            return 1.3, 5000  # معامل التكلفة مرتفع
+
+@app.route("/", methods=["GET", "POST"])
 def index():
-    activities = {
-        "التخزين المؤقت للمواد القابلة للتدوير": None,
-        "تجارة المواد القابلة للتدوير": None,
-        "تفكيك وتغليف نفايات الاسبستوس": None,
-        "التخلص النهائي من النفايات الخطرة": None,
-        "التخلص النهائي من النفايات البلدية الصلبة": None,
-        "جمع ونقل النفايات غير الخطرة": [
-            "جمع ونقل النفايات السكنية",
-            "جمع ونقل النفايات التجارية والإدارية",
-            "جمع ونقل النفايات الوسائط البحرية",
-            "جمع ونقل النفايات الخضراء",
-            "جمع ونقل النفايات القابلة لإعادة الاستخدام والتدوير",
-            "جمع ونقل نفايات الهدم والبناء",
-            "جمع ونقل النفايات الخاملة"
-        ],
-        "جمع ونقل النفايات الخطرة": [
-            "جمع ونقل النفايات الكيميائية",
-            "جمع ونقل النفايات الطبية",
-            "جمع ونقل الحمأة",
-            "جمع ونقل نفايات الزيوت",
-            "جمع ونقل نفايات الاسبستوس",
-            "جمع ونقل النفايات الالكترونية",
-            "جمع ونقل نفايات البطاريات",
-            "جمع ونقل الرماد الكربوني",
-            "جمع ونقل نفايات الوسائط البحرية"
-        ]
-    }
+    result = None
+    if request.method == "POST":
+        main_activity = request.form.get("main_activity")
+        sub_activities = request.form.getlist("sub_activity")  # استخدام getlist لاختيار أكثر من نشاط فرعي
+        vehicle_counts = request.form.getlist("vehicle_count")  # قائمة عدد المركبات
+        cost_factors = []
 
-    if request.method == 'POST':
-        selected_activity = request.form.get('activity')
-        selected_sub_activities = request.form.getlist('sub_activities')
-        cost_factor = request.form.get('cost_factor')
+        # تحديد خط الأساس بناءً على النشاط الرئيسي
+        base_cost = 7500 if main_activity == "non_hazardous" else 10000
+        total_cost = 0
+        max_review_cost = 0
 
-        if selected_activity:
-            base_cost = 0
-            if selected_activity == "التخزين المؤقت للمواد القابلة للتدوير":
-                base_cost = 10000
-            elif selected_activity == "تجارة المواد القابلة للتدوير":
-                base_cost = 7500
-            elif selected_activity == "تفكيك وتغليف نفايات الاسبستوس":
-                base_cost = 15000
-            elif selected_activity == "التخلص النهائي من النفايات الخطرة":
-                base_cost = 30000
-            elif selected_activity == "التخلص النهائي من النفايات البلدية الصلبة":
-                base_cost = 20000
-            elif selected_activity == "جمع ونقل النفايات غير الخطرة":
-                base_cost = 5000
-            elif selected_activity == "جمع ونقل النفايات الخطرة":
-                base_cost = 10000
+        # معالجة الأنشطة الفرعية مع عدد المركبات الخاص بكل نشاط
+        for sub_activity, vehicle_count in zip(sub_activities, vehicle_counts):
+            if vehicle_count.strip():  # التأكد من إدخال عدد مركبات
+                vehicle_count = int(vehicle_count)
+                cost_factor, review_cost = get_cost_factor(vehicle_count, main_activity)
+                # حساب التكلفة لكل نشاط فرعي
+                total_cost += base_cost * cost_factor  # ضرب خط الأساس في معامل التكلفة
+                max_review_cost = max(max_review_cost, review_cost)
 
-            # حساب معامل التكلفة بناءً على الاختيارات
-            if cost_factor == "منخفض":
-                factor = 0.8
-            elif cost_factor == "متوسط":
-                factor = 1
-            else:
-                factor = 1.3
+        # إضافة المقابل المالي لتدقيق الطلب
+        total_cost += max_review_cost + 500  # إضافة تكلفة تقديم الطلب الثابتة
+        result = f"The total cost is {total_cost} SAR"
 
-            total_cost = (base_cost * factor) + 1000  # مقبول التكلفة لتدقيق الطلب (افتراض أن المقابل المالي لتدقيق الطلب ثابت)
+    return render_template("index.html", result=result)
 
-            return render_template('index.html', activities=activities, total_cost=total_cost, logo_url="static/logo.png")
-
-    return render_template('index.html', activities=activities, logo_url="static/logo.png")
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
