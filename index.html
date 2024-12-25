@@ -3,182 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حساب تكلفة إدارة النفايات</title>
+    <title>حساب المقابل المالي</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            direction: rtl;
+            background-color: #f4f4f4;
             margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
+            padding: 20px;
         }
         .container {
             max-width: 800px;
-            margin: 30px auto;
+            margin: 0 auto;
+            background-color: #fff;
             padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         h1 {
             text-align: center;
             color: #333;
         }
-        form {
-            margin-top: 20px;
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
         }
         label {
-            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
             display: block;
-            margin-bottom: 5px;
         }
-        select, input[type="text"], button {
+        input[type="number"], select {
             width: 100%;
             padding: 10px;
-            margin-bottom: 15px;
+            font-size: 16px;
+            margin: 10px 0;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 5px;
         }
         button {
             background-color: #4CAF50;
             color: white;
+            font-size: 16px;
+            padding: 10px 20px;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
+            width: 100%;
         }
         button:hover {
             background-color: #45a049;
         }
         .result {
-            background: #e7f3e7;
-            color: #333;
-            padding: 10px;
-            border-radius: 4px;
             margin-top: 20px;
+            background-color: #f1f1f1;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        img {
-            display: block;
-            margin: 0 auto 20px auto;
+        .result p {
+            font-size: 18px;
+            margin: 5px 0;
+        }
+        .hidden {
+            display: none;
+        }
+        .subActivityField {
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <img src="https://aalmutairit.github.io/fin/static/logo.png" alt="Logo" width="200">
-        <h1>حساب تكلفة إدارة النفايات</h1>
-        <form id="calculator-form" method="post">
-            <label for="main_activity">النشاط الرئيسي</label>
-            <select id="main_activity" name="main_activity" required onchange="showSubActivities()">
-                <option value="">-- اختر النشاط الرئيسي --</option>
-                <option value="non_hazardous">جمع ونقل غير خطر</option>
-                <option value="hazardous">جمع ونقل خطر</option>
-                <option value="waste_processing">معالجة النفايات</option>
-                <option value="asbestos_removal">تفكيك وتغليف الأسبستوس</option>
+        <div class="logo">
+            <img src=/static/"logo.png" alt="الشعار" width="150">
+        </div>
+
+        <h1>حساب المقابل المالي للنشاط</h1>
+
+        <form id="costForm">
+            <label for="activity">اختر النشاط:</label>
+            <select id="activity" name="activity" onchange="updateFields()">
+                <option value="none">اختر النشاط</option>
+                <option value="nonHazardous">جمع ونقل النفايات غير الخطرة</option>
+                <option value="hazardous">جمع ونقل النفايات الخطرة</option>
+                <option value="treatment">معالجة النفايات</option>
             </select>
 
-            <!-- جمع ونقل غير خطر -->
-            <div id="non_hazardous" class="sub-activity-container" style="display:none;">
-                <label for="sub_activity">اختر الأنشطة الفرعية لجمع النفايات غير الخطرة</label>
-                <input type="text" name="num_vehicles_non_hazardous" placeholder="عدد المركبات">
+            <!-- الأنشطة الفرعية لجمع ونقل النفايات غير الخطرة -->
+            <div id="nonHazardousSubActivities" class="hidden">
+                <label for="subActivityNonHazardous">اختر الأنشطة الفرعية (اختيار متعدد):</label>
+                <select id="subActivityNonHazardous" name="subActivityNonHazardous" multiple onchange="toggleVehicleFields('nonHazardous')">
+                    <option value="residential">جمع ونقل نفايات المنازل</option>
+                    <option value="commercial">جمع ونقل نفايات تجارية وإدارية</option>
+                    <option value="marine">جمع ونقل نفايات بحرية وفقاً لاتفاقية ماربول</option>
+                    <option value="green">جمع ونقل نفايات خضراء</option>
+                    <option value="recyclable">جمع ونقل نفايات قابلة لإعادة التدوير</option>
+                    <option value="construction">جمع ونقل نفايات الهدم والبناء</option>
+                    <option value="inert">جمع ونقل نفايات غير قابلة للتفاعل</option>
+                </select>
             </div>
 
-            <!-- جمع ونقل خطر -->
-            <div id="hazardous" class="sub-activity-container" style="display:none;">
-                <label for="sub_activity">اختر الأنشطة الفرعية لجمع النفايات الخطرة</label>
-                <input type="text" name="num_vehicles_hazardous" placeholder="عدد المركبات">
+            <!-- الأنشطة الفرعية لجمع ونقل النفايات الخطرة -->
+            <div id="hazardousSubActivities" class="hidden">
+                <label for="subActivityHazardous">اختر الأنشطة الفرعية (اختيار متعدد):</label>
+                <select id="subActivityHazardous" name="subActivityHazardous" multiple onchange="toggleVehicleFields('hazardous')">
+                    <option value="chemical">جمع ونقل نفايات كيميائية</option>
+                    <option value="medical">جمع ونقل نفايات طبية</option>
+                    <option value="sludge">جمع ونقل نفايات الحمأة</option>
+                    <option value="oil">جمع ونقل نفايات زيتية</option>
+                    <option value="asbestos">جمع ونقل نفايات الأسبستوس</option>
+                    <option value="electronic">جمع ونقل نفايات إلكترونية وكهربائية</option>
+                    <option value="battery">جمع ونقل نفايات البطاريات</option>
+                    <option value="carbon">جمع ونقل نفايات رماد الكربون</option>
+                    <option value="marineHazardous">جمع ونقل نفايات بحرية خطرة</option>
+                </select>
             </div>
 
-            <!-- معالجة النفايات -->
-            <div id="waste_processing" class="sub-activity-container" style="display:none;">
-                <label for="sub_activity">اختر الأنشطة الفرعية لمعالجة النفايات</label>
-                <div>
-                    <input type="checkbox" id="waste_processing_hazardous" name="sub_activity" value="hazardous">
-                    <label for="waste_processing_hazardous">معالجة النفايات الخطرة</label>
-                    <input type="text" name="num_vehicles_hazardous" placeholder="عدد المركبات">
-                </div>
-                <div>
-                    <input type="checkbox" id="waste_processing_medical" name="sub_activity" value="medical">
-                    <label for="waste_processing_medical">معالجة النفايات الطبية</label>
-                    <input type="text" name="num_vehicles_medical" placeholder="عدد المركبات">
-                </div>
-                <div>
-                    <input type="checkbox" id="waste_processing_asbestos" name="sub_activity" value="asbestos">
-                    <label for="waste_processing_asbestos">تفكيك وتغليف الأسبستوس</label>
-                    <input type="text" name="num_vehicles_asbestos" placeholder="عدد المركبات">
-                </div>
+            <!-- حقل السعة التشغيلية القصوى للنفايات -->
+            <div id="capacityDiv" class="hidden">
+                <label for="capacity">السعة القصوى للمعالجة (طن/يوم):</label>
+                <input type="number" id="capacity" name="capacity" required placeholder="أدخل السعة القصوى للمعالجة" />
             </div>
 
-            <!-- تفكيك وتغليف الأسبستوس -->
-            <div id="asbestos_removal" class="sub-activity-container" style="display:none;">
-                <label for="sub_activity">تفكيك وتغليف الأسبستوس</label>
-                <input type="text" name="num_vehicles_asbestos_removal" placeholder="عدد المركبات">
-            </div>
+            <!-- حقل عدد المركبات لكل نشاط فرعي -->
+            <div id="vehicleFields"></div>
 
-            <button type="button" onclick="calculateTotal()">حساب التكلفة الإجمالية</button>
+            <button type="button" onclick="calculateCost()">حساب التكلفة</button>
         </form>
 
         <div class="result" id="result" style="display:none;">
-            <h3>إجمالي التكلفة المقدرة: <span id="total_cost"></span> ريال</h3>
+            <p>التكلفة الإجمالية: <span id="totalCost"></span> ريال</p>
         </div>
     </div>
 
     <script>
-        var activityRates = {
-            non_hazardous: { baseline: 7500, lowFactor: 0.9, mediumFactor: 1.1, highFactor: 1.3 },
-            hazardous: { baseline: 10000, lowFactor: 0.9, mediumFactor: 1.1, highFactor: 1.3 },
-            waste_processing: { baseline: 30000, lowFactor: 0.9, mediumFactor: 1.1, highFactor: 1.3 },
-            asbestos_removal: { baseline: 10000, lowFactor: 0.9, mediumFactor: 1.1, highFactor: 1.3 }
-        };
+        function updateFields() {
+            let activity = document.getElementById("activity").value;
+            let nonHazardousSubActivities = document.getElementById("nonHazardousSubActivities");
+            let hazardousSubActivities = document.getElementById("hazardousSubActivities");
+            let capacityDiv = document.getElementById("capacityDiv");
 
-        function showSubActivities() {
-            var mainActivity = document.getElementById("main_activity").value;
-            if (mainActivity == "non_hazardous") {
-                document.getElementById("non_hazardous").style.display = "block";
-                document.getElementById("hazardous").style.display = "none";
-                document.getElementById("waste_processing").style.display = "none";
-                document.getElementById("asbestos_removal").style.display = "none";
-            } else if (mainActivity == "hazardous") {
-                document.getElementById("non_hazardous").style.display = "none";
-                document.getElementById("hazardous").style.display = "block";
-                document.getElementById("waste_processing").style.display = "none";
-                document.getElementById("asbestos_removal").style.display = "none";
-            } else if (mainActivity == "waste_processing") {
-                document.getElementById("non_hazardous").style.display = "none";
-                document.getElementById("hazardous").style.display = "none";
-                document.getElementById("waste_processing").style.display = "block";
-                document.getElementById("asbestos_removal").style.display = "none";
-            } else if (mainActivity == "asbestos_removal") {
-                document.getElementById("non_hazardous").style.display = "none";
-                document.getElementById("hazardous").style.display = "none";
-                document.getElementById("waste_processing").style.display = "none";
-                document.getElementById("asbestos_removal").style.display = "block";
-            } else {
-                document.getElementById("non_hazardous").style.display = "none";
-                document.getElementById("hazardous").style.display = "none";
-                document.getElementById("waste_processing").style.display = "none";
-                document.getElementById("asbestos_removal").style.display = "none";
+            // إخفاء جميع الحقول
+            nonHazardousSubActivities.classList.add("hidden");
+            hazardousSubActivities.classList.add("hidden");
+            capacityDiv.classList.add("hidden");
+            document.getElementById("vehicleFields").innerHTML = ''; // إعادة تعيين حقل المركبات
+
+            // إظهار الحقول بناءً على النشاط المختار
+            if (activity === "nonHazardous") {
+                nonHazardousSubActivities.classList.remove("hidden");
+            } else if (activity === "hazardous") {
+                hazardousSubActivities.classList.remove("hidden");
+            } else if (activity === "treatment") {
+                capacityDiv.classList.remove("hidden");
             }
         }
 
-        function calculateTotal() {
-            var totalCost = 0;
+        function toggleVehicleFields(activityType) {
+            let selectedOptions = document.querySelectorAll(`#subActivity${capitalizeFirstLetter(activityType)} option:checked`);
+            let vehicleFields = document.getElementById("vehicleFields");
+            vehicleFields.innerHTML = ''; // إعادة تعيين الحقول السابقة
 
-            var numVehicles = parseInt(document.querySelector("input[name='num_vehicles_non_hazardous']").value) || 0;
-            if (numVehicles > 0) {
-                totalCost += activityRates.non_hazardous.baseline * (numVehicles <= 5 ? activityRates.non_hazardous.lowFactor : numVehicles <= 10 ? activityRates.non_hazardous.mediumFactor : activityRates.non_hazardous.highFactor);
+            selectedOptions.forEach(option => {
+                let activityName = option.value;
+                let vehicleFieldDiv = document.createElement("div");
+                vehicleFieldDiv.classList.add("subActivityField");
+                vehicleFieldDiv.innerHTML = `
+                    <label for="numVehicles_${activityName}">عدد المركبات لنشاط ${activityName}:</label>
+                    <input type="number" id="numVehicles_${activityName}" name="numVehicles_${activityName}" required placeholder="أدخل عدد المركبات لـ ${activityName}" />
+                `;
+                vehicleFields.appendChild(vehicleFieldDiv);
+            });
+        }
+
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        function calculateCost() {
+            let totalCost = 0;
+            let activity = document.getElementById("activity").value;
+
+            if (activity === "nonHazardous") {
+                let selectedNonHazardous = Array.from(document.getElementById("subActivityNonHazardous").selectedOptions).map(option => option.value);
+                selectedNonHazardous.forEach(subActivity => {
+                    let numVehicles = parseInt(document.getElementById(`numVehicles_${subActivity}`).value);
+                    let baselineCost = 7500; // التكلفة الأساسية للنفايات غير الخطرة
+                    let costFactor = (numVehicles < 10) ? 0.8 : (numVehicles <= 50 ? 1.0 : 1.2);
+                    let cost = baselineCost * costFactor;
+                    let reviewFee = (costFactor === 0.8) ? 1000 : (costFactor === 1.0 ? 3000 : 0); // تم إزالة 500 ريال
+                    totalCost += (cost + reviewFee);
+                });
+            } else if (activity === "hazardous") {
+                let selectedHazardous = Array.from(document.getElementById("subActivityHazardous").selectedOptions).map(option => option.value);
+                selectedHazardous.forEach(subActivity => {
+                    let numVehicles = parseInt(document.getElementById(`numVehicles_${subActivity}`).value);
+                    let baselineCost = 15000; // التكلفة الأساسية للنفايات الخطرة
+                    let costFactor = (numVehicles < 5) ? 0.8 : (numVehicles <= 30 ? 1.0 : 1.2);
+                    let cost = baselineCost * costFactor;
+                    let reviewFee = (costFactor === 0.8) ? 1000 : (costFactor === 1.0 ? 3000 : 0); // تم إزالة 500 ريال
+                    totalCost += (cost + reviewFee);
+                });
+            } else if (activity === "treatment") {
+                let capacity = parseFloat(document.getElementById("capacity").value);
+                let baselineCost = 20000; // التكلفة الأساسية لمعالجة النفايات
+                let costFactor = (capacity < 1) ? 0.8 : (capacity <= 5 ? 1.0 : 1.2);
+                let cost = baselineCost * costFactor;
+                totalCost = cost;
             }
 
-            numVehicles = parseInt(document.querySelector("input[name='num_vehicles_hazardous']").value) || 0;
-            if (numVehicles > 0) {
-                totalCost += activityRates.hazardous.baseline * (numVehicles <= 5 ? activityRates.hazardous.lowFactor : numVehicles <= 10 ? activityRates.hazardous.mediumFactor : activityRates.hazardous.highFactor);
-            }
-
-            numVehicles = parseInt(document.querySelector("input[name='num_vehicles_hazardous']").value) || 0;
-            if (numVehicles > 0) {
-                totalCost += activityRates.waste_processing.baseline * (numVehicles <= 5 ? activityRates.waste_processing.lowFactor : numVehicles <= 10 ? activityRates.waste_processing.mediumFactor : activityRates.waste_processing.highFactor);
-            }
-
-            document.getElementById("total_cost").innerText = totalCost.toFixed(2);
+            document.getElementById("totalCost").innerText = totalCost.toFixed(2);
             document.getElementById("result").style.display = "block";
         }
     </script>
+
 </body>
 </html>
