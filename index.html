@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Waste Management Cost Calculator</title>
+    <title>حساب تكلفة إدارة النفايات</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -58,256 +58,126 @@
             display: block;
             margin: 0 auto 20px auto;
         }
-        .sub-activity-container {
-            margin-bottom: 20px;
-        }
-        .sub-activity-container select, .sub-activity-container input {
-            width: 48%;
-            display: inline-block;
-            margin-right: 4%;
-        }
-        .sub-activity-container input:last-child {
-            margin-right: 0;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <img src="https://aalmutairit.github.io/fin/static/logo.png" alt="Logo" width="200">
-        <h1>Waste Management Cost Calculator</h1>
+        <h1>حساب تكلفة إدارة النفايات</h1>
         <form id="calculator-form" method="post">
-            <label for="main_activity">Main Activity</label>
+            <label for="main_activity">النشاط الرئيسي</label>
             <select id="main_activity" name="main_activity" required onchange="showSubActivities()">
-                <option value="">-- Select Main Activity --</option>
-                <option value="non_hazardous">Non-Hazardous Waste Collection</option>
-                <option value="hazardous">Hazardous Waste Collection</option>
+                <option value="">-- اختر النشاط الرئيسي --</option>
+                <option value="non_hazardous">جمع ونقل غير خطر</option>
+                <option value="hazardous">جمع ونقل خطر</option>
+                <option value="waste_processing">معالجة النفايات</option>
+                <option value="asbestos_removal">تفكيك وتغليف الأسبستوس</option>
             </select>
 
+            <!-- جمع ونقل غير خطر -->
             <div id="non_hazardous" class="sub-activity-container" style="display:none;">
-                <label for="sub_activity">Select Sub Activities for Non-Hazardous Waste</label>
-                <div id="non_hazardous_sub_activities">
-                    <div>
-                        <input type="checkbox" id="non_hazardous_commercial" name="sub_activity" value="commercial">
-                        <label for="non_hazardous_commercial">Commercial and Administrative Waste</label>
-                        <input type="text" name="num_vehicles_commercial" placeholder="Number of Vehicles">
-                    </div>
-                    <div>
-                        <input type="checkbox" id="non_hazardous_residential" name="sub_activity" value="residential">
-                        <label for="non_hazardous_residential">Residential Waste</label>
-                        <input type="text" name="num_vehicles_residential" placeholder="Number of Vehicles">
-                    </div>
-                    <div>
-                        <input type="checkbox" id="non_hazardous_marine" name="sub_activity" value="marine">
-                        <label for="non_hazardous_marine">Marine Waste</label>
-                        <input type="text" name="num_vehicles_marine" placeholder="Number of Vehicles">
-                    </div>
-                    <div>
-                        <input type="checkbox" id="non_hazardous_green" name="sub_activity" value="green">
-                        <label for="non_hazardous_green">Green Waste</label>
-                        <input type="text" name="num_vehicles_green" placeholder="Number of Vehicles">
-                    </div>
-                    <div>
-                        <input type="checkbox" id="non_hazardous_reusable" name="sub_activity" value="reusable">
-                        <label for="non_hazardous_reusable">Reusable and Recyclable Waste</label>
-                        <input type="text" name="num_vehicles_reusable" placeholder="Number of Vehicles">
-                    </div>
-                    <div>
-                        <input type="checkbox" id="non_hazardous_demolition" name="sub_activity" value="demolition">
-                        <label for="non_hazardous_demolition">Demolition and Construction Waste</label>
-                        <input type="text" name="num_vehicles_demolition" placeholder="Number of Vehicles">
-                    </div>
-                    <div>
-                        <input type="checkbox" id="non_hazardous_inert" name="sub_activity" value="inert">
-                        <label for="non_hazardous_inert">Inert Waste</label>
-                        <input type="text" name="num_vehicles_inert" placeholder="Number of Vehicles">
-                    </div>
-                </div>
+                <label for="sub_activity">اختر الأنشطة الفرعية لجمع النفايات غير الخطرة</label>
+                <input type="text" name="num_vehicles_non_hazardous" placeholder="عدد المركبات">
             </div>
 
+            <!-- جمع ونقل خطر -->
             <div id="hazardous" class="sub-activity-container" style="display:none;">
-                <label for="sub_activity">Select Sub Activities for Hazardous Waste</label>
-                <div id="hazardous_sub_activities">
-                    <div>
-                        <input type="checkbox" id="hazardous_chemical" name="sub_activity" value="chemical">
-                        <label for="hazardous_chemical">Chemical Waste</label>
-                        <input type="text" name="num_vehicles_chemical" placeholder="Number of Vehicles">
-                    </div>
-                    <div>
-                        <input type="checkbox" id="hazardous_medical" name="sub_activity" value="medical">
-                        <label for="hazardous_medical">Medical Waste</label>
-                        <input type="text" name="num_vehicles_medical" placeholder="Number of Vehicles">
-                    </div>
-                    <div>
-                        <input type="checkbox" id="hazardous_sludge" name="sub_activity" value="sludge">
-                        <label for="hazardous_sludge">Sludge</label>
-                        <input type="text" name="num_vehicles_sludge" placeholder="Number of Vehicles">
-                    </div>
-                    <div>
-                        <input type="checkbox" id="hazardous_oil" name="sub_activity" value="oil">
-                        <label for="hazardous_oil">Oil Waste</label>
-                        <input type="text" name="num_vehicles_oil" placeholder="Number of Vehicles">
-                    </div>
-                    <div>
-                        <input type="checkbox" id="hazardous_asbestos" name="sub_activity" value="asbestos">
-                        <label for="hazardous_asbestos">Asbestos Waste</label>
-                        <input type="text" name="num_vehicles_asbestos" placeholder="Number of Vehicles">
-                    </div>
-                    <div>
-                        <input type="checkbox" id="hazardous_electronics" name="sub_activity" value="electronics">
-                        <label for="hazardous_electronics">Electronic Waste</label>
-                        <input type="text" name="num_vehicles_electronics" placeholder="Number of Vehicles">
-                    </div>
-                    <div>
-                        <input type="checkbox" id="hazardous_battery" name="sub_activity" value="battery">
-                        <label for="hazardous_battery">Battery Waste</label>
-                        <input type="text" name="num_vehicles_battery" placeholder="Number of Vehicles">
-                    </div>
-                    <div>
-                        <input type="checkbox" id="hazardous_carbon" name="sub_activity" value="carbon">
-                        <label for="hazardous_carbon">Carbon Ash</label>
-                        <input type="text" name="num_vehicles_carbon" placeholder="Number of Vehicles">
-                    </div>
-                    <div>
-                        <input type="checkbox" id="hazardous_marine" name="sub_activity" value="marine">
-                        <label for="hazardous_marine">Marine Waste</label>
-                        <input type="text" name="num_vehicles_marine_hazardous" placeholder="Number of Vehicles">
-                    </div>
+                <label for="sub_activity">اختر الأنشطة الفرعية لجمع النفايات الخطرة</label>
+                <input type="text" name="num_vehicles_hazardous" placeholder="عدد المركبات">
+            </div>
+
+            <!-- معالجة النفايات -->
+            <div id="waste_processing" class="sub-activity-container" style="display:none;">
+                <label for="sub_activity">اختر الأنشطة الفرعية لمعالجة النفايات</label>
+                <div>
+                    <input type="checkbox" id="waste_processing_hazardous" name="sub_activity" value="hazardous">
+                    <label for="waste_processing_hazardous">معالجة النفايات الخطرة</label>
+                    <input type="text" name="num_vehicles_hazardous" placeholder="عدد المركبات">
+                </div>
+                <div>
+                    <input type="checkbox" id="waste_processing_medical" name="sub_activity" value="medical">
+                    <label for="waste_processing_medical">معالجة النفايات الطبية</label>
+                    <input type="text" name="num_vehicles_medical" placeholder="عدد المركبات">
+                </div>
+                <div>
+                    <input type="checkbox" id="waste_processing_asbestos" name="sub_activity" value="asbestos">
+                    <label for="waste_processing_asbestos">تفكيك وتغليف الأسبستوس</label>
+                    <input type="text" name="num_vehicles_asbestos" placeholder="عدد المركبات">
                 </div>
             </div>
 
-            <button type="button" onclick="calculateTotal()">Calculate Total Cost</button>
+            <!-- تفكيك وتغليف الأسبستوس -->
+            <div id="asbestos_removal" class="sub-activity-container" style="display:none;">
+                <label for="sub_activity">تفكيك وتغليف الأسبستوس</label>
+                <input type="text" name="num_vehicles_asbestos_removal" placeholder="عدد المركبات">
+            </div>
+
+            <button type="button" onclick="calculateTotal()">حساب التكلفة الإجمالية</button>
         </form>
 
-        <div id="result" class="result" style="display:none;">
-            <h2>Calculation Result</h2>
-            <p id="result_text"></p>
+        <div class="result" id="result" style="display:none;">
+            <h3>إجمالي التكلفة المقدرة: <span id="total_cost"></span> ريال</h3>
         </div>
     </div>
 
     <script>
+        var activityRates = {
+            non_hazardous: { baseline: 7500, lowFactor: 0.9, mediumFactor: 1.1, highFactor: 1.3 },
+            hazardous: { baseline: 10000, lowFactor: 0.9, mediumFactor: 1.1, highFactor: 1.3 },
+            waste_processing: { baseline: 30000, lowFactor: 0.9, mediumFactor: 1.1, highFactor: 1.3 },
+            asbestos_removal: { baseline: 10000, lowFactor: 0.9, mediumFactor: 1.1, highFactor: 1.3 }
+        };
+
         function showSubActivities() {
             var mainActivity = document.getElementById("main_activity").value;
             if (mainActivity == "non_hazardous") {
                 document.getElementById("non_hazardous").style.display = "block";
                 document.getElementById("hazardous").style.display = "none";
+                document.getElementById("waste_processing").style.display = "none";
+                document.getElementById("asbestos_removal").style.display = "none";
             } else if (mainActivity == "hazardous") {
                 document.getElementById("non_hazardous").style.display = "none";
                 document.getElementById("hazardous").style.display = "block";
+                document.getElementById("waste_processing").style.display = "none";
+                document.getElementById("asbestos_removal").style.display = "none";
+            } else if (mainActivity == "waste_processing") {
+                document.getElementById("non_hazardous").style.display = "none";
+                document.getElementById("hazardous").style.display = "none";
+                document.getElementById("waste_processing").style.display = "block";
+                document.getElementById("asbestos_removal").style.display = "none";
+            } else if (mainActivity == "asbestos_removal") {
+                document.getElementById("non_hazardous").style.display = "none";
+                document.getElementById("hazardous").style.display = "none";
+                document.getElementById("waste_processing").style.display = "none";
+                document.getElementById("asbestos_removal").style.display = "block";
             } else {
                 document.getElementById("non_hazardous").style.display = "none";
                 document.getElementById("hazardous").style.display = "none";
+                document.getElementById("waste_processing").style.display = "none";
+                document.getElementById("asbestos_removal").style.display = "none";
             }
         }
 
         function calculateTotal() {
             var totalCost = 0;
 
-            // Non-Hazardous Waste Rates
-            var nonHazardousRates = {
-                commercial: { baseline: 7500, lowFactor: 0.8, mediumFactor: 1.0, highFactor: 1.2, reviewFeeLow: 1000, reviewFeeMedium: 3000 },
-                residential: { baseline: 7500, lowFactor: 0.8, mediumFactor: 1.0, highFactor: 1.2, reviewFeeLow: 1000, reviewFeeMedium: 3000 },
-                marine: { baseline: 7500, lowFactor: 0.8, mediumFactor: 1.0, highFactor: 1.2, reviewFeeLow: 1000, reviewFeeMedium: 3000 },
-                green: { baseline: 7500, lowFactor: 0.8, mediumFactor: 1.0, highFactor: 1.2, reviewFeeLow: 1000, reviewFeeMedium: 3000 },
-                reusable: { baseline: 7500, lowFactor: 0.8, mediumFactor: 1.0, highFactor: 1.2, reviewFeeLow: 1000, reviewFeeMedium: 3000 },
-                demolition: { baseline: 7500, lowFactor: 0.8, mediumFactor: 1.0, highFactor: 1.2, reviewFeeLow: 1000, reviewFeeMedium: 3000 },
-                inert: { baseline: 7500, lowFactor: 0.8, mediumFactor: 1.0, highFactor: 1.2, reviewFeeLow: 1000, reviewFeeMedium: 3000 }
-            };
-
-            // Hazardous Waste Rates
-            var hazardousRates = {
-                chemical: { baseline: 7500, lowFactor: 0.8, mediumFactor: 1.0, highFactor: 1.2, reviewFeeLow: 1000, reviewFeeMedium: 3000 },
-                medical: { baseline: 7500, lowFactor: 0.8, mediumFactor: 1.0, highFactor: 1.2, reviewFeeLow: 1000, reviewFeeMedium: 3000 },
-                sludge: { baseline: 7500, lowFactor: 0.8, mediumFactor: 1.0, highFactor: 1.2, reviewFeeLow: 1000, reviewFeeMedium: 3000 },
-                oil: { baseline: 7500, lowFactor: 0.8, mediumFactor: 1.0, highFactor: 1.2, reviewFeeLow: 1000, reviewFeeMedium: 3000 },
-                asbestos: { baseline: 7500, lowFactor: 0.8, mediumFactor: 1.0, highFactor: 1.2, reviewFeeLow: 1000, reviewFeeMedium: 3000 },
-                electronics: { baseline: 7500, lowFactor: 0.8, mediumFactor: 1.0, highFactor: 1.2, reviewFeeLow: 1000, reviewFeeMedium: 3000 },
-                battery: { baseline: 7500, lowFactor: 0.8, mediumFactor: 1.0, highFactor: 1.2, reviewFeeLow: 1000, reviewFeeMedium: 3000 },
-                carbon: { baseline: 7500, lowFactor: 0.8, mediumFactor: 1.0, highFactor: 1.2, reviewFeeLow: 1000, reviewFeeMedium: 3000 },
-                marine_hazardous: { baseline: 7500, lowFactor: 0.8, mediumFactor: 1.0, highFactor: 1.2, reviewFeeLow: 1000, reviewFeeMedium: 3000 }
-            };
-
-            // Function to calculate cost for each selected sub-activity
-            function calculateSubActivityCost(numVehicles, rates) {
-                if (numVehicles < 10) {
-                    return rates.lowFactor * rates.baseline + rates.reviewFeeLow;
-                } else if (numVehicles <= 50) {
-                    return rates.mediumFactor * rates.baseline + rates.reviewFeeMedium;
-                } else {
-                    return rates.highFactor * rates.baseline + 0;
-                }
+            var numVehicles = parseInt(document.querySelector("input[name='num_vehicles_non_hazardous']").value) || 0;
+            if (numVehicles > 0) {
+                totalCost += activityRates.non_hazardous.baseline * (numVehicles <= 5 ? activityRates.non_hazardous.lowFactor : numVehicles <= 10 ? activityRates.non_hazardous.mediumFactor : activityRates.non_hazardous.highFactor);
             }
 
-            // Non-hazardous waste calculations
-            if (document.getElementById("non_hazardous_commercial").checked) {
-                var numVehiclesCommercial = parseInt(document.querySelector("input[name='num_vehicles_commercial']").value) || 0;
-                totalCost += calculateSubActivityCost(numVehiclesCommercial, nonHazardousRates.commercial);
-            }
-            if (document.getElementById("non_hazardous_residential").checked) {
-                var numVehiclesResidential = parseInt(document.querySelector("input[name='num_vehicles_residential']").value) || 0;
-                totalCost += calculateSubActivityCost(numVehiclesResidential, nonHazardousRates.residential);
-            }
-            if (document.getElementById("non_hazardous_marine").checked) {
-                var numVehiclesMarine = parseInt(document.querySelector("input[name='num_vehicles_marine']").value) || 0;
-                totalCost += calculateSubActivityCost(numVehiclesMarine, nonHazardousRates.marine);
-            }
-            if (document.getElementById("non_hazardous_green").checked) {
-                var numVehiclesGreen = parseInt(document.querySelector("input[name='num_vehicles_green']").value) || 0;
-                totalCost += calculateSubActivityCost(numVehiclesGreen, nonHazardousRates.green);
-            }
-            if (document.getElementById("non_hazardous_reusable").checked) {
-                var numVehiclesReusable = parseInt(document.querySelector("input[name='num_vehicles_reusable']").value) || 0;
-                totalCost += calculateSubActivityCost(numVehiclesReusable, nonHazardousRates.reusable);
-            }
-            if (document.getElementById("non_hazardous_demolition").checked) {
-                var numVehiclesDemolition = parseInt(document.querySelector("input[name='num_vehicles_demolition']").value) || 0;
-                totalCost += calculateSubActivityCost(numVehiclesDemolition, nonHazardousRates.demolition);
-            }
-            if (document.getElementById("non_hazardous_inert").checked) {
-                var numVehiclesInert = parseInt(document.querySelector("input[name='num_vehicles_inert']").value) || 0;
-                totalCost += calculateSubActivityCost(numVehiclesInert, nonHazardousRates.inert);
+            numVehicles = parseInt(document.querySelector("input[name='num_vehicles_hazardous']").value) || 0;
+            if (numVehicles > 0) {
+                totalCost += activityRates.hazardous.baseline * (numVehicles <= 5 ? activityRates.hazardous.lowFactor : numVehicles <= 10 ? activityRates.hazardous.mediumFactor : activityRates.hazardous.highFactor);
             }
 
-            // Hazardous waste calculations
-            if (document.getElementById("hazardous_chemical").checked) {
-                var numVehiclesChemical = parseInt(document.querySelector("input[name='num_vehicles_chemical']").value) || 0;
-                totalCost += calculateSubActivityCost(numVehiclesChemical, hazardousRates.chemical);
-            }
-            if (document.getElementById("hazardous_medical").checked) {
-                var numVehiclesMedical = parseInt(document.querySelector("input[name='num_vehicles_medical']").value) || 0;
-                totalCost += calculateSubActivityCost(numVehiclesMedical, hazardousRates.medical);
-            }
-            if (document.getElementById("hazardous_sludge").checked) {
-                var numVehiclesSludge = parseInt(document.querySelector("input[name='num_vehicles_sludge']").value) || 0;
-                totalCost += calculateSubActivityCost(numVehiclesSludge, hazardousRates.sludge);
-            }
-            if (document.getElementById("hazardous_oil").checked) {
-                var numVehiclesOil = parseInt(document.querySelector("input[name='num_vehicles_oil']").value) || 0;
-                totalCost += calculateSubActivityCost(numVehiclesOil, hazardousRates.oil);
-            }
-            if (document.getElementById("hazardous_asbestos").checked) {
-                var numVehiclesAsbestos = parseInt(document.querySelector("input[name='num_vehicles_asbestos']").value) || 0;
-                totalCost += calculateSubActivityCost(numVehiclesAsbestos, hazardousRates.asbestos);
-            }
-            if (document.getElementById("hazardous_electronics").checked) {
-                var numVehiclesElectronics = parseInt(document.querySelector("input[name='num_vehicles_electronics']").value) || 0;
-                totalCost += calculateSubActivityCost(numVehiclesElectronics, hazardousRates.electronics);
-            }
-            if (document.getElementById("hazardous_battery").checked) {
-                var numVehiclesBattery = parseInt(document.querySelector("input[name='num_vehicles_battery']").value) || 0;
-                totalCost += calculateSubActivityCost(numVehiclesBattery, hazardousRates.battery);
-            }
-            if (document.getElementById("hazardous_carbon").checked) {
-                var numVehiclesCarbon = parseInt(document.querySelector("input[name='num_vehicles_carbon']").value) || 0;
-                totalCost += calculateSubActivityCost(numVehiclesCarbon, hazardousRates.carbon);
-            }
-            if (document.getElementById("hazardous_marine").checked) {
-                var numVehiclesMarineHazardous = parseInt(document.querySelector("input[name='num_vehicles_marine_hazardous']").value) || 0;
-                totalCost += calculateSubActivityCost(numVehiclesMarineHazardous, hazardousRates.marine_hazardous);
+            numVehicles = parseInt(document.querySelector("input[name='num_vehicles_hazardous']").value) || 0;
+            if (numVehicles > 0) {
+                totalCost += activityRates.waste_processing.baseline * (numVehicles <= 5 ? activityRates.waste_processing.lowFactor : numVehicles <= 10 ? activityRates.waste_processing.mediumFactor : activityRates.waste_processing.highFactor);
             }
 
-            // Display the result
+            document.getElementById("total_cost").innerText = totalCost.toFixed(2);
             document.getElementById("result").style.display = "block";
-            document.getElementById("result_text").innerText = "Total Project Cost: " + totalCost + " SAR";
         }
     </script>
 </body>
