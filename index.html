@@ -317,6 +317,10 @@
             totalCost += baseCost * costFactor;
         });
     }
+    else if (selectedActivity === 'none') {
+        alert('وش تبي تحسب؟!.');
+        return;
+    }
 
     let reviewFee = maxCostFactor === 0.8 ? 1000 : (maxCostFactor === 1.0 ? 3000 : 5000);
     totalCost += reviewFee;
