@@ -296,6 +296,27 @@
         let baseCost = 15000; // خط الأساس لمنشآت إعادة التدوير
         totalCost = baseCost * costFactor;
     }
+    else if (selectedActivity === 'wasteStorage') {
+        const capacityInput = document.getElementById('capacityStorage');
+        const capacity = parseFloat(capacityInput.value);
+
+        if (isNaN(capacity) || capacity <= 0) {
+            alert('يرجى إدخال سعة صالحة.');
+            return;
+        }
+
+        selectedSubActivities.push(
+            ...Array.from(document.getElementById('subActivitiesStorage').selectedOptions).map(opt => opt.value)
+        );
+
+        let costFactor = capacity < 10 ? 0.8 : (capacity <= 100 ? 1.0 : 1.3);
+        maxCostFactor = Math.max(maxCostFactor, costFactor);
+
+        selectedSubActivities.forEach(activity => {
+            let baseCost = activity === 'hazardousWasteStorage' ? 10000 : 7500;
+            totalCost += baseCost * costFactor;
+        });
+    }
 
     let reviewFee = maxCostFactor === 0.8 ? 1000 : (maxCostFactor === 1.0 ? 3000 : 5000);
     totalCost += reviewFee;
